@@ -2,6 +2,14 @@ package com.gourmetapp;
 
 import com.facebook.react.ReactActivity;
 
+/// 
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
+
 public class MainActivity extends ReactActivity {
 
     /**
@@ -11,5 +19,12 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "GourmetApp";
+    }
+
+    /// for fblogin
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }
