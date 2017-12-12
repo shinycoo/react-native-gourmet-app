@@ -39,6 +39,7 @@ export default class LoginScreen extends Component<{}> {
     try {
       const token = await AsyncStorage.getItem('@Session:token');
       if (token !== null) {
+        this.updatePushToken(token);
         this.props.navigation.dispatch({
           type: 'Navigation/RESET',
           index: 0,
@@ -46,8 +47,24 @@ export default class LoginScreen extends Component<{}> {
         });
       }
     } catch (error) {
-
     }
+  }
+
+  updatePushToken(sessionToken) {
+    var formData = new FormData();
+    formData.append('push', global.pushToken);
+    formData.append('token', sessionToken);
+    fetch(GLOBAL.HOST+'mobile/push', {
+        method: 'POST',
+        body: formData
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   onLoginResult(result) {
@@ -61,6 +78,8 @@ export default class LoginScreen extends Component<{}> {
       alert('로그인에 실패하였습니다.:'+error);
       return;
     }
+
+    this.updatePushToken(result.token);
 
     this.props.navigation.dispatch({
       type: 'Navigation/RESET',
